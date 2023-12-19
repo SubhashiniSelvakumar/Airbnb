@@ -19,9 +19,8 @@ st.set_page_config(page_title= "Airbnb Data Visualization",
 with st.sidebar:
     selected = option_menu("Menu", ["Home","Overview","Explore"], 
                            icons=["house","graph-up-arrow","bar-chart-line"],
-                           menu_icon= "menu-button-wide",
                            default_index=0,
-                           styles={"nav-link": {"font-size": "20px", "text-align": "left", "margin": "-2px", "--hover-color": "#FF5A5F"},
+                           styles={"nav-link": {"font-size": "15px", "text-align": "left", "margin": "-2px", "--hover-color": "#FF5A5F"},
                                    "nav-link-selected": {"background-color": "#FF5A5F"}}
                           )
 
@@ -35,45 +34,48 @@ df = pd.read_csv('D:\Subhashini\Datascience\Tools\Airbnb_data.csv')
 
 # HOME PAGE
 if selected == "Home":
-    st.image("D:\Subhashini\Datascience\Tools\Air.png")
     st.title("Airbnb Data Visualization")
-    col1,col2 = st.columns(2,gap= 'medium')
-    col1.markdown("## :blue[Domain] : Travel Industry, Property Management and Tourism")
-    col1.markdown("## :blue[Technologies used] : Python, Pandas, Plotly, Streamlit, MongoDB")
-    col1.markdown("## :blue[Overview] : To analyze Airbnb data using MongoDB Atlas, perform data cleaning and preparation, develop interactive visualizations, and create dynamic plots to gain insights into pricing variations, availability patterns, and location-based trends. ")
-    col2.markdown("#   ")
-    col2.markdown("#   ")
+    st.markdown("## :blue[Domain] : ", unsafe_allow_html=True)
+    st.write("<span style='font-size:20px'>Travel Industry, Property Management and Tourism</span>", unsafe_allow_html=True)
+    st.markdown("## :blue[Technologies used] : ", unsafe_allow_html=True)
+    st.write("<span style='font-size:20px'> Python, Pandas, Plotly, Streamlit, MongoDB </span>", unsafe_allow_html=True)
+    st.markdown("## :blue[Overview] : ", unsafe_allow_html=True)
+    st.write("<span style='font-size:20px'> To analyze Airbnb data using MongoDB Atlas, perform data cleaning and preparation, develop interactive visualizations, and create dynamic plots to gain insights into pricing variations, availability patterns, and location-based trends.</span>", unsafe_allow_html=True)
     
 # OVERVIEW PAGE
+
 if selected == "Overview":
-    tab1,tab2 = st.tabs(["$\huge 📝 RAW DATA $", "$\huge🚀 INSIGHTS $"])
-    
-    # RAW DATA TAB
+    # Create tabs with Markdown for custom font and style
+    tab1, tab2 = st.columns(2)
     with tab1:
-        # RAW DATA
-        col1,col2 = st.columns(2)
-        if col1.button("Click to view Raw data"):
-            col1.write(col.find_one())
-        # DATAFRAME FORMAT
-        if col2.button("Click to view Dataframe"):
-            col1.write(col.find_one())
-            col2.write(df)
-       
-    # INSIGHTS TAB
+        st.markdown("<h1 style='font-family: Arial; color: purple;'>📝 Raw Data</h1>", unsafe_allow_html=True)
     with tab2:
-        # GETTING USER INPUTS
-        country = st.sidebar.multiselect('Select a Country',sorted(df.Country.unique()),sorted(df.Country.unique()))
-        prop = st.sidebar.multiselect('Select Property_type',sorted(df.Property_type.unique()),sorted(df.Property_type.unique()))
-        room = st.sidebar.multiselect('Select Room_type',sorted(df.Room_type.unique()),sorted(df.Room_type.unique()))
-        price = st.slider('Select Price',df.Price.min(),df.Price.max(),(df.Price.min(),df.Price.max()))
-        
+        st.markdown("<h1 style='font-family: Times New Roman; color: brown;'>🚀 Insights</h1>", unsafe_allow_html=True)
+
+    raw_data_columns = st.columns(2)
+    col1, col2 = raw_data_columns
+    if col1.button("Click to view Raw data"):
+        col1.write(col.find_one())
+
+    if col2.button("Click to view Dataframe"):
+        col1.write(col.find_one())
+        col2.write(df)
+        # INSIGHTS TAB
+    insights_columns = st.columns(2)
+    col3, col4 = insights_columns
+
+    # GETTING USER INPUTS
+    country = st.sidebar.multiselect('Select a Country', sorted(df.Country.unique()), sorted(df.Country.unique()))
+    prop = st.sidebar.multiselect('Select Property_type', sorted(df.Property_type.unique()), sorted(df.Property_type.unique()))
+    room = st.sidebar.multiselect('Select Room_type', sorted(df.Room_type.unique()), sorted(df.Room_type.unique()))
+    price = st.slider('Select Price', df.Price.min(), df.Price.max(), (df.Price.min(), df.Price.max()))
         # CONVERTING THE USER INPUT INTO QUERY
-        query = f'Country in {country} & Room_type in {room} & Property_type in {prop} & Price >= {price[0]} & Price <= {price[1]}'
+    query = f'Country in {country} & Room_type in {room} & Property_type in {prop} & Price >= {price[0]} & Price <= {price[1]}'
         
         # CREATING COLUMNS
-        col1,col2 = st.columns(2,gap='medium')
+    col1,col2 = st.columns(2,gap='medium')
         
-        with col1:
+    with col1:
             
             # TOP 10 PROPERTY TYPES BAR CHART
             df1 = df.query(query).groupby(["Property_type"]).size().reset_index(name="Listings").sort_values(by='Listings',ascending=False)[:10]
@@ -98,7 +100,7 @@ if selected == "Overview":
             fig.update_layout(showlegend=False)
             st.plotly_chart(fig,use_container_width=True)
         
-        with col2:
+    with col2:
             
             # TOTAL LISTINGS IN EACH ROOM TYPES PIE CHART
             df1 = df.query(query).groupby(["Room_type"]).size().reset_index(name="counts")
