@@ -4,7 +4,7 @@ This web application is designed to visualize and analyze Airbnb data using Stre
 
 ### Prerequisites
 
-- Python (3.6 or later)
+- Python 
 - MongoDB Atlas account
 
 ### Libraries Used:
